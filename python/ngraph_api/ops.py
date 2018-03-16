@@ -37,7 +37,7 @@ from ngraph_api.utils.types import get_element_type
 
 @nameable_op
 def parameter(shape, dtype=np.float32, name=None):
-    # type: (TensorShape, NumericType, str) -> Parameter
+    # type: (TensorShape, NumericType, Optional[str]) -> Parameter
     """Return an ngraph Parameter object."""
     assert_list_of_ints(shape, 'Parameter shape must be a list of integer values.')
     element_type = get_element_type(dtype)
@@ -45,58 +45,59 @@ def parameter(shape, dtype=np.float32, name=None):
 
 
 @nameable_op
-def constant(value, dtype=None, name=None):  # type: (NumericData, NumericType, str) -> Constant
+def constant(value, dtype=None, name=None):
+    # type: (NumericData, NumericType, Optional[str]) -> Constant
     """Return an ngraph Constant object with the specified value."""
     return make_constant_node(value, dtype)
 
 
 # Unary ops
 @unary_op
-def absolute(node, name=None):  # type: (NodeInput, str) -> Node
+def absolute(node, name=None):  # type: (NodeInput, Optional[str]) -> Node
     """Return node which applies f(x) = abs(x) to the input node elementwise."""
     node = as_node(node)
     return Abs(node)
 
 
 @unary_op
-def sqrt(node, name=None):  # type: (NodeInput, str) -> Node
+def sqrt(node, name=None):  # type: (NodeInput, Optional[str]) -> Node
     """Return node which applies square root to the input node elementwise."""
     return Sqrt(node)
 
 
 @unary_op
-def exp(node, name=None):  # type: (NodeInput, str) -> Node
+def exp(node, name=None):  # type: (NodeInput, Optional[str]) -> Node
     """Return node which applies exp to the input node elementwise."""
     return Exp(node)
 
 
 @unary_op
-def log(node, name=None):  # type: (NodeInput, str) -> Node
+def log(node, name=None):  # type: (NodeInput, Optional[str]) -> Node
     """Return node which applies natural logarithm to the input node elementwise."""
     return Log(node)
 
 
 @unary_op
-def negative(node, name=None):  # type: (NodeInput, str) -> Node
+def negative(node, name=None):  # type: (NodeInput, Optional[str]) -> Node
     """Return node which applies f(x) = -x to the input node elementwise."""
     return Negative(node)
 
 
 @unary_op
-def floor(node, name=None):  # type: (NodeInput, str) -> Node
+def floor(node, name=None):  # type: (NodeInput, Optional[str]) -> Node
     """Return node which applies floor to the input node elementwise."""
     return Floor(node)
 
 
 @unary_op
-def ceiling(node, name=None):  # type: (NodeInput, str) -> Node
+def ceiling(node, name=None):  # type: (NodeInput, Optional[str]) -> Node
     """Return node which applies ceiling to the input node elementwise."""
     return Ceiling(node)
 
 
 @unary_op
 def reshape(node, input_order, output_shape, name=None):
-    # type: (Node, List[int], List[int], str) -> None
+    # type: (Node, List[int], List[int], Optional[str]) -> None
     """Return reshaped node according to provided parameters.
 
     :param node: The tensor we want to reshape.
@@ -108,80 +109,91 @@ def reshape(node, input_order, output_shape, name=None):
 
 # Binary ops
 @binary_op
-def divide(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, str) -> Node
+def divide(left_node, right_node, name=None):
+    # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which applies f(x) = A/B to the input nodes elementwise."""
     return Divide(left_node, right_node)
 
 
 @binary_op
-def multiply(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, str) -> Node
+def multiply(left_node, right_node, name=None):
+    # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which applies f(x) = A*B to the input nodes elementwise."""
     return Multiply(left_node, right_node)
 
 
 @binary_op
-def subtract(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, str) -> Node
+def subtract(left_node, right_node, name=None):
+    # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which applies f(x) = A-B to the input nodes elementwise."""
     return Subtract(left_node, right_node)
 
 
 @binary_op
-def add(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, str) -> Node
+def add(left_node, right_node, name=None):
+    # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which applies f(x) = A+B to the input nodes elementwise."""
     return Add(left_node, right_node)
 
 
 @binary_op
-def minimum(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, str) -> Node
+def minimum(left_node, right_node, name=None):
+    # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which applies the minimum operation to input nodes elementwise."""
     return Minimum(left_node, right_node)
 
 
 @binary_op
-def maximum(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, str) -> Node
+def maximum(left_node, right_node, name=None):
+    # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which applies the maximum operation to input nodes elementwise."""
     return Maximum(left_node, right_node)
 
 
 # Logical ops
 @binary_op
-def equal(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, str) -> Node
+def equal(left_node, right_node, name=None):
+    # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which checks if input nodes are equal elementwise."""
     return Equal(left_node, right_node)
 
 
 @binary_op
-def not_equal(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, str) -> Node
+def not_equal(left_node, right_node, name=None):
+    # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which checks if input nodes are unequal elementwise."""
     return NotEqual(left_node, right_node)
 
 
 @binary_op
-def greater(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, str) -> Node
+def greater(left_node, right_node, name=None):
+    # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which checks if left input node is greater than the right node elementwise."""
     return Greater(left_node, right_node)
 
 
 @binary_op
-def greater_eq(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, str) -> Node
+def greater_eq(left_node, right_node, name=None):
+    # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which checks if left node is greater or equal to the right node elementwise."""
     return GreaterEq(left_node, right_node)
 
 
 @binary_op
-def less(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, str) -> Node
+def less(left_node, right_node, name=None):
+    # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which checks if left input node is less than the right node elementwise."""
     return Less(left_node, right_node)
 
 
 @binary_op
-def less_eq(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, str) -> Node
+def less_eq(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which checks if left node is less or equal to the right node elementwise."""
     return LessEq(left_node, right_node)
 
 
 @unary_op
-def logical_not(node, name=None):  # type: (Node, str) -> Node
+def logical_not(node, name=None):  # type: (Node, Optional[str]) -> Node
     """Return node which applies logical negation to the input node elementwise."""
     return Not(node)
 
@@ -207,13 +219,14 @@ Node.__ge__ = greater_eq
 
 # Custom ops
 @nameable_op
-def broadcast(node, new_shape, axis=None, name=None):  # type: (Node, TensorShape, int, str) -> Node
+def broadcast(node, new_shape, axis=None, name=None):
+    # type: (Node, TensorShape, int, Optional[str]) -> Node
     """Return node which broadcasts input node values to specified shape."""
     return Broadcast(node, Shape(new_shape), get_broadcast_axes(new_shape, node.shape, axis))
 
 
 @nameable_op
-def convert(node, new_type, name=None):  # type: (Node, NumericType, str) -> Node
+def convert(node, new_type, name=None):  # type: (Node, NumericType, Optional[str]) -> Node
     """Return node which casts input node values to specified type."""
     new_element_type = get_element_type(new_type)
     return Convert(node, new_element_type)
@@ -221,7 +234,7 @@ def convert(node, new_type, name=None):  # type: (Node, NumericType, str) -> Nod
 
 # Non-linear ops
 @unary_op
-def tanh(node, name=None):  # type: (Node, str) -> Node
+def tanh(node, name=None):  # type: (Node, Optional[str]) -> Node
     """Return node which applies tanh to the input node elementwise."""
     return Tanh(node)
 
@@ -229,7 +242,7 @@ def tanh(node, name=None):  # type: (Node, str) -> Node
 # matmul ops
 @nameable_op
 def dot(left_node, right_node, name=None):
-    # type: (Node, Node, str) -> Node
+    # type: (Node, Node, Optional[str]) -> Node
     """Return node which performs matrix multiplication of two input nodes."""
     return Dot(left_node, right_node)
 
@@ -242,7 +255,7 @@ def convolution(x,                      # type: Node
                 dilation=None,          # type: List[int]
                 padding_above=None,     # type: List[int]
                 padding_below=None,     # type: List[int]
-                name=None,              # type: str
+                name=None,              # type: Optional[str]
                 ):
     # type: (...) -> Node
     """Return convolution node."""
@@ -266,7 +279,7 @@ def avg_pool(x,                      # type: Node
              padding_above=None,     # type: List[int]
              padding_below=None,     # type: List[int]
              zero_pad=True,          # type: bool
-             name=None,              # type: str
+             name=None,              # type: Optional[str]
              ):
     # type: (...) -> Node
     """Return average pooling node."""
@@ -287,7 +300,7 @@ def max_pool(x,                      # type: Node
              strides=None,           # type: List[int]
              padding_above=None,     # type: List[int]
              padding_below=None,     # type: List[int]
-             name=None,              # type: str
+             name=None,              # type: Optional[str]
              ):
     # type: (...) -> Node
     """Return max pooling node."""
