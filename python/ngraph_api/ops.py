@@ -17,12 +17,12 @@
 """Factory functions for all ngraph ops."""
 import numpy as np
 
-from ngraph import AxisSet, AxisVector, CoordinateDiff, Node, Shape, Strides
+from ngraph.impl import AxisSet, AxisVector, Coordinate, CoordinateDiff, Node, Shape, Strides
 
-from ngraph.op import Abs, Add, AvgPool, Broadcast, Ceiling, Constant, Convert, Convolution, \
+from ngraph.impl.op import Abs, Add, AvgPool, Broadcast, Ceiling, Constant, Convert, Convolution, \
     Divide, Dot, Equal, Exp, Floor, Greater, GreaterEq, Less, LessEq, Log, Max, Maximum, MaxPool, \
-    Min, Minimum, Multiply, Negative, Not, NotEqual, Parameter, Product, Reshape, Sqrt, Subtract, \
-    Sum, Tanh
+    Min, Minimum, Multiply, Negative, Not, NotEqual, Parameter, Product, Reshape, Slice, Sqrt, \
+    Subtract, Sum, Tanh
 
 from typing import Iterable, List, Optional
 
@@ -187,7 +187,8 @@ def less(left_node, right_node, name=None):
 
 
 @binary_op
-def less_eq(left_node, right_node, name=None):  # type: (NodeInput, NodeInput, Optional[str]) -> Node
+def less_eq(left_node, right_node, name=None):
+    # type: (NodeInput, NodeInput, Optional[str]) -> Node
     """Return node which checks if left node is less or equal to the right node elementwise."""
     return LessEq(left_node, right_node)
 
@@ -364,3 +365,24 @@ def prod(node, reduction_axes=None, name=None):
     """
     reduction_axes = get_reduction_axes(node, reduction_axes)
     return Product(node, AxisSet(reduction_axes))
+
+
+# reshape ops
+@nameable_op
+def slice(node, lower_bounds, upper_bounds, strides=None, name=None):
+    # type: (Node, List[int], List[int], Optional[List[int]], Optional[str]) -> Node
+    """Take a slice of an input tensor, (sub-tensor) that resides within a bounding box.
+
+    Optionally this function may be provided with stride along each axis.
+
+    :param node: The tensor we want to slice.
+    :param lower_bounds: The (inclusive) lower-bound coordinates for the tensor slice.
+    :param upper_bounds: The (exclusive) upper-bound coordinates for the tensor slice.
+    :param strides: The strides for the tensor slice.
+    :param name: Optional name for the output node.
+    :return: Return node that represents a slice of input nodes data.
+    """
+    if strides is None:
+        return Slice(node, Coordinate(lower_bounds), Coordinate(upper_bounds))
+    else:
+        return Slice(node, Coordinate(lower_bounds), Coordinate(upper_bounds), Strides(strides))
